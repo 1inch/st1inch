@@ -28,7 +28,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // true,
     );
 
-
     if ((await st1inch.feeReceiver()) === constants.ZERO_ADDRESS) {
         await (await st1inch.setFeeReceiver(deployer)).wait();
     }
