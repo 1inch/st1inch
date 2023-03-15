@@ -28,8 +28,30 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // true,
     );
 
+
     if ((await st1inch.feeReceiver()) === constants.ZERO_ADDRESS) {
         await (await st1inch.setFeeReceiver(deployer)).wait();
+    }
+
+    if ((await st1inch.maxLossRatio()).toBigInt() === 0n) {
+        await (await st1inch.setMaxLossRatio('900000000')).wait(); // 90%
+    }
+
+    if ((await st1inch.minLockPeriodRatio()).toBigInt() === 0n) {
+        await (await st1inch.setMinLockPeriodRatio('100000000')).wait(); // 10%
+    }
+
+    const st1inchPreview = await idempotentDeployGetContract(
+        'St1inchPreview',
+        [st1inch.address],
+        deployments,
+        deployer,
+        'St1inchPreview',
+        // true,
+    );
+
+    if ((await st1inchPreview.durationUntilMaxAllowedLoss()).toBigInt() === 0n) {
+        await (await st1inchPreview.setDurationUntilMaxAllowedLoss(2101612)).wait();
     }
 };
 
