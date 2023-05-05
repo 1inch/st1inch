@@ -27,6 +27,7 @@
   "dependencies": {
     "@1inch/erc20-pods": "0.0.17",
     "@1inch/solidity-utils": "2.2.21",
+    "@1inch/farming": "1.2.6",
     "@openzeppelin/contracts": "4.8.2"
   },
   "devDependencies": {
