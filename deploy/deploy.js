@@ -10,6 +10,7 @@ const INCH = {
 };
 
 const expBase = '999999952502977513';
+const feeReceiver = '0x7951c7ef839e26F63DA87a42C9a87986507f1c07';
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const chainId = await getChainId();
@@ -21,7 +22,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     const st1inch = await idempotentDeployGetContract(
         'St1inch',
-        [INCH[chainId], expBase],
+        [INCH[chainId], expBase, feeReceiver],
         deployments,
         deployer,
         'St1inch',
@@ -51,6 +52,19 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     if ((await st1inchPreview.durationUntilMaxAllowedLoss()).toBigInt() === 0n) {
         await (await st1inchPreview.setDurationUntilMaxAllowedLoss(2101612)).wait();
+    }
+
+    const st1inchFarm = await idempotentDeployGetContract(
+        'StakingFarmingPod',
+        [st1inch.address],
+        deployments,
+        deployer,
+        'StakingFarmingPod',
+        // true,
+    );
+
+    if ((await st1inch.defaultFarm()) === constants.ZERO_ADDRESS) {
+        await (await st1inch.setDefaultFarm(st1inchFarm.address)).wait();
     }
 };
 
