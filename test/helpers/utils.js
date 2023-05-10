@@ -65,7 +65,7 @@ const idempotentDeploy = async (
 
     console.log(`${deploymentName} deployed to: ${contract.address}`);
 
-    if (!skipVerify) {
+    if (!(skipVerify || hre.network.name === 'hardhat')) {
         await _delay(2000);
         await _tryRun(() =>
             hre.run('verify:verify', {
