@@ -243,10 +243,10 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
     }
     
     /**
-     * @notice Internal function to deposit funds and add a new pod for the default farm if needed
-     * @param account The account making the deposit
-     * @param amount The amount to be deposited
-     * @param duration The lock duration for the deposit
+     * @notice Implements logic to stake tokens and add the staker for the default farm if needed
+     * @param account The account staking tokens
+     * @param amount The amount to be staked
+     * @param duration The lock duration for the stake
      */
     function _deposit(address account, uint256 amount, uint256 duration) private {
         if (emergencyExit) revert DepositsDisabled();
@@ -330,14 +330,19 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
     }
     
     /**
-    * @notice Calculates the loss amount if the staker does early withdrawal at the current block
-    * @dev Internal function
-    * @param depAmount The amount deposited by the staker
-    * @param stBalance The current balance of the staker
-    * @return loss The loss amount
-    * @return ret The return amount
-    */
-
+     * @notice Calculates the loss amount if the staker does early withdrawal at the current block
+     * @dev Internal, Maths:
+     * 1. amount = (deposit - vp(balance)) * K, where
+     * amount - amount to unstake,
+     * deposit - stake amount,
+     * vp(balance) - voting power of the given balance at the current block,
+     * K - koefficient, to adjust the loss amount to 0 at the end of the lock period.
+     * 2. loss = deposit - amount, where loss is loss amount
+     * @param depAmount The amount deposited by the staker
+     * @param stBalance The current balance of the staker
+     * @return loss The loss amount
+     * @return ret The return amount
+     */
     function _earlyWithdrawLoss(uint256 depAmount, uint256 stBalance) private view returns (uint256 loss, uint256 ret) {
         ret = (depAmount - _votingPowerAt(stBalance, block.timestamp)) * _VOTING_POWER_DIVIDER / (_VOTING_POWER_DIVIDER - 1);
         loss = depAmount - ret;
@@ -364,18 +369,13 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
         }
     }
 
-     /**
-     * @dev Private function to withdraw deposited tokens and burn corresponding staking tokens
-     * @param depositor Struct containing depositor's information
-     * @param balance Amount of staking tokens to be burned
-     */
     function _withdraw(Depositor memory depositor, uint256 balance) private {
-        totalDeposits -= depositor.amount; // Reduce total deposits by the amount being withdrawn
-        depositor.amount = 0; // Set depositor's amount to zero
+        totalDeposits -= depositor.amount;
+        depositor.amount = 0;
         // Update unlockTime in storage for next transaction optimization
         depositor.unlockTime = uint40(block.timestamp);
-        depositors[msg.sender] = depositor; // Update depositor's information in storage
-        _burn(msg.sender, balance); // Burn staking tokens
+        depositors[msg.sender] = depositor;
+        _burn(msg.sender, balance);
     }
 
     /**
@@ -397,43 +397,42 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
     // ERC20 methods disablers
 
      /**
-     * @notice Throws an error indicating that approve functionality is disabled
-     * @dev This function always throws
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
      */
     function approve(address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert ApproveDisabled();
     }
 
     /**
-     * @notice Throws an error indicating that transfer functionality is disabled
-     * @dev This function always throws
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
      */
     function transfer(address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
     }
 
     /**
-     * @notice Throws an error indicating that transferFrom functionality is disabled
-     * @dev This function always throws
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
      */
     function transferFrom(address, address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
     }
 
     /**
-     * @notice Throws an error indicating that increaseAllowance functionality is disabled
-     * @dev This function always throws
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
      */
     function increaseAllowance(address, uint256) public pure override returns (bool) {
         revert ApproveDisabled();
     }
 
     /**
-     * @notice Throws an error indicating that decreaseAllowance functionality is disabled
-     * @dev This function always throws
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
      */
     function decreaseAllowance(address, uint256) public pure override returns (bool) {
         revert ApproveDisabled();
     }
-
 }
