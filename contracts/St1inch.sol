@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@1inch/erc20-pods/contracts/ERC20Pods.sol";
-import "@1inch/erc20-pods/contracts/Pod.sol";
+import "@1inch/token-plugins/contracts/ERC20Plugins.sol";
+import "@1inch/token-plugins/contracts/Plugin.sol";
 import "@1inch/solidity-utils/contracts/libraries/SafeERC20.sol";
 import "./helpers/VotingPowerCalculator.sol";
 import "./interfaces/IVotable.sol";
@@ -22,7 +22,7 @@ import "./interfaces/IVotable.sol";
  * - earlyWithdrawal
  * - penalty math
  */
-contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
+contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
     using SafeERC20 for IERC20;
 
     event EmergencyExitSet(bool status);
@@ -57,11 +57,11 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
     /// @notice Voting power decreased to 1/_VOTING_POWER_DIVIDER after lock expires
     /// @dev WARNING: It is not enough to change the constant only but voting power decrease curve should be revised also
     uint256 private constant _VOTING_POWER_DIVIDER = 20;
-    uint256 private constant _PODS_LIMIT = 5;
-    /// @notice Maximum allowed gas spent by each attached pod. If there not enough gas for pod execution then
-    /// transaction is reverted. If pod uses more gas then its execution is reverted silently, not affection the
+    uint256 private constant _PLUGINS_LIMIT = 5;
+    /// @notice Maximum allowed gas spent by each attached plugin. If there not enough gas for plugin execution then
+    /// transaction is reverted. If plugin uses more gas then its execution is reverted silently, not affection the
     /// main transaction
-    uint256 private constant _POD_CALL_GAS_LIMIT = 500_000;
+    uint256 private constant _PLUGIN_CALL_GAS_LIMIT = 500_000;
     uint256 private constant _ONE_E9 = 1e9;
 
     IERC20 public immutable oneInch;
@@ -88,7 +88,7 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
      * @param expBase_ The rate for the voting power decrease over time
      */
     constructor(IERC20 oneInch_, uint256 expBase_, address feeReceiver_)
-        ERC20Pods(_PODS_LIMIT, _POD_CALL_GAS_LIMIT)
+        ERC20Plugins(_PLUGINS_LIMIT, _PLUGIN_CALL_GAS_LIMIT)
         ERC20("Staking 1INCH v2", "st1INCH")
         VotingPowerCalculator(expBase_, block.timestamp)
     {
@@ -114,7 +114,7 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
      * @param defaultFarm_ The farm contract address
      */
     function setDefaultFarm(address defaultFarm_) external onlyOwner {
-        if (defaultFarm_ != address(0) && Pod(defaultFarm_).token() != this) revert DefaultFarmTokenMismatch();
+        if (defaultFarm_ != address(0) && Plugin(defaultFarm_).token() != this) revert DefaultFarmTokenMismatch();
         defaultFarm = defaultFarm_;
         emit DefaultFarmSet(defaultFarm_);
     }
@@ -263,8 +263,8 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
             oneInch.safeTransferFrom(msg.sender, address(this), amount);
         }
 
-        if (defaultFarm != address(0) && !hasPod(account, defaultFarm)) {
-            _addPod(account, defaultFarm);
+        if (defaultFarm != address(0) && !hasPlugin(account, defaultFarm)) {
+            _addPlugin(account, defaultFarm);
         }
     }
 

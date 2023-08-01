@@ -1,5 +1,5 @@
-require('@nomiclabs/hardhat-ethers');
-require('@nomiclabs/hardhat-etherscan');
+require('@nomicfoundation/hardhat-ethers');
+require('@nomicfoundation/hardhat-verify');
 require('@nomicfoundation/hardhat-chai-matchers');
 require('solidity-coverage');
 require('hardhat-dependency-compiler');
@@ -33,8 +33,8 @@ module.exports = {
         paths: [
             '@1inch/solidity-utils/contracts/mocks/TokenMock.sol',
             '@1inch/solidity-utils/contracts/mocks/ERC20PermitMock.sol',
-            '@1inch/erc20-pods/contracts/mocks/PodMock.sol',
-            '@1inch/erc20-pods/contracts/mocks/WrongPodMock.sol',
+            '@1inch/token-plugins/contracts/mocks/PluginMock.sol',
+            '@1inch/token-plugins/contracts/mocks/BadPluginMock.sol',
             '@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit',
         ],
     },
