@@ -2,15 +2,15 @@
 
 pragma solidity 0.8.19;
 
-import "@1inch/farming/contracts/FarmingPod.sol";
+import "@1inch/farming/contracts/FarmingPlugin.sol";
 import "./interfaces/ISt1inch.sol";
 
-contract StakingFarmingPod is FarmingPod {
+contract StakingFarmingPlugin is FarmingPlugin {
     using SafeERC20 for IERC20;
 
     ISt1inch public immutable st1inch;
 
-    constructor(ISt1inch st1inch_) FarmingPod(st1inch_, st1inch_.oneInch()) {
+    constructor(ISt1inch st1inch_) FarmingPlugin(st1inch_, st1inch_.oneInch()) {
         st1inch = st1inch_;
     }
 

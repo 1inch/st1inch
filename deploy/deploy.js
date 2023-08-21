@@ -29,42 +29,42 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // true,
     );
 
-    if ((await st1inch.feeReceiver()) === constants.ZERO_ADDRESS) {
+    if (await st1inch.feeReceiver() === constants.ZERO_ADDRESS) {
         await (await st1inch.setFeeReceiver(deployer)).wait();
     }
 
-    if ((await st1inch.maxLossRatio()).toBigInt() === 0n) {
+    if (await st1inch.maxLossRatio() === 0n) {
         await (await st1inch.setMaxLossRatio('900000000')).wait(); // 90%
     }
 
-    if ((await st1inch.minLockPeriodRatio()).toBigInt() === 0n) {
+    if (await st1inch.minLockPeriodRatio() === 0n) {
         await (await st1inch.setMinLockPeriodRatio('100000000')).wait(); // 10%
     }
 
     const st1inchPreview = await idempotentDeployGetContract(
         'St1inchPreview',
-        [st1inch.address],
+        [await st1inch.getAddress()],
         deployments,
         deployer,
         'St1inchPreview',
         // true,
     );
 
-    if ((await st1inchPreview.durationUntilMaxAllowedLoss()).toBigInt() === 0n) {
+    if (await st1inchPreview.durationUntilMaxAllowedLoss() === 0n) {
         await (await st1inchPreview.setDurationUntilMaxAllowedLoss(2101612)).wait();
     }
 
     const st1inchFarm = await idempotentDeployGetContract(
-        'StakingFarmingPod',
-        [st1inch.address],
+        'StakingFarmingPlugin',
+        [await st1inch.getAddress()],
         deployments,
         deployer,
-        'StakingFarmingPod',
+        'StakingFarmingPlugin',
         // true,
     );
 
     if ((await st1inch.defaultFarm()) === constants.ZERO_ADDRESS) {
-        await (await st1inch.setDefaultFarm(st1inchFarm.address)).wait();
+        await (await st1inch.setDefaultFarm(st1inchFarm)).wait();
     }
 };
 
