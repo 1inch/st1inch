@@ -241,7 +241,13 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         oneInch.safePermit(permit);
         _deposit(account, amount, 0);
     }
-
+    
+    /**
+     * @notice Implements logic to stake tokens and add the staker for the default farm if needed
+     * @param account The account staking tokens
+     * @param amount The amount to be staked
+     * @param duration The lock duration for the stake
+     */
     function _deposit(address account, uint256 amount, uint256 duration) private {
         if (emergencyExit) revert DepositsDisabled();
         Depositor memory depositor = depositors[account]; // SLOAD
@@ -322,7 +328,21 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         (loss, ret) = _earlyWithdrawLoss(amount, balanceOf(account));
         canWithdraw = loss <= amount * maxLossRatio / _ONE_E9;
     }
-
+    
+    /**
+     * @notice Calculates the loss amount if the staker does early withdrawal at the current block
+     * @dev Internal, Maths:
+     * 1. amount = (deposit - vp(balance)) * K, where
+     * amount - amount to unstake,
+     * deposit - stake amount,
+     * vp(balance) - voting power of the given balance at the current block,
+     * K - coefficient, to adjust the loss amount to 0 at the end of the lock period.
+     * 2. loss = deposit - amount, where loss is loss amount
+     * @param depAmount The amount deposited by the staker
+     * @param stBalance The current balance of the staker
+     * @return loss The loss amount
+     * @return ret The return amount
+     */
     function _earlyWithdrawLoss(uint256 depAmount, uint256 stBalance) private view returns (uint256 loss, uint256 ret) {
         ret = (depAmount - _votingPowerAt(stBalance, block.timestamp)) * _VOTING_POWER_DIVIDER / (_VOTING_POWER_DIVIDER - 1);
         loss = depAmount - ret;
@@ -352,9 +372,9 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
     function _withdraw(Depositor memory depositor, uint256 balance) private {
         totalDeposits -= depositor.amount;
         depositor.amount = 0;
-        // keep unlockTime in storage for next tx optimization
+        // Store unlockTime in storage for next transaction optimization
         depositor.unlockTime = uint40(block.timestamp);
-        depositors[msg.sender] = depositor; // SSTORE
+        depositors[msg.sender] = depositor;
         _burn(msg.sender, balance);
     }
 
@@ -376,22 +396,42 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
 
     // ERC20 methods disablers
 
+     /**
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
+     */
     function approve(address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert ApproveDisabled();
     }
 
+    /**
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
+     */
     function transfer(address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
     }
 
+    /**
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
+     */
     function transferFrom(address, address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
     }
 
+    /**
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
+     */
     function increaseAllowance(address, uint256) public pure override returns (bool) {
         revert ApproveDisabled();
     }
 
+    /**
+     * @notice Always reverts to disable ERC20 token transfer feature
+     * @dev This function always reverts
+     */
     function decreaseAllowance(address, uint256) public pure override returns (bool) {
         revert ApproveDisabled();
     }
