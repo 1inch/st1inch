@@ -336,7 +336,7 @@ contract St1inch is ERC20Pods, Ownable, VotingPowerCalculator, IVotable {
      * amount - amount to unstake,
      * deposit - stake amount,
      * vp(balance) - voting power of the given balance at the current block,
-     * K - koefficient, to adjust the loss amount to 0 at the end of the lock period.
+     * K - coefficient, to adjust the loss amount to 0 at the end of the lock period.
      * 2. loss = deposit - amount, where loss is loss amount
      * @param depAmount The amount deposited by the staker
      * @param stBalance The current balance of the staker
