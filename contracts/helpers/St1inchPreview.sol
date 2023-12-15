@@ -13,7 +13,10 @@ contract St1inchPreview is VotingPowerCalculator, Ownable {
     uint256 private constant _ONE_E9 = 1e9;
     uint256 public durationUntilMaxAllowedLoss;  // log(0.95 * maxAllowedLoss + 0.05) / log(baseExp)
 
-    constructor(St1inch st1INCH_) VotingPowerCalculator(st1INCH_.expBase(), st1INCH_.origin()) {
+    constructor(St1inch st1INCH_)
+        VotingPowerCalculator(st1INCH_.expBase(), st1INCH_.origin())
+        Ownable(msg.sender)
+    {
         st1INCH = st1INCH_;
     }
 

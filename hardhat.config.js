@@ -19,6 +19,7 @@ module.exports = {
                 enabled: true,
                 runs: 1000000,
             },
+            viaIR: true,
         },
     },
     networks,
@@ -26,9 +27,6 @@ module.exports = {
         deployer: {
             default: 0,
         },
-    },
-    gasReporter: {
-        enable: true,
     },
     dependencyCompiler: {
         paths: [

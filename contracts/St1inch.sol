@@ -91,6 +91,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         ERC20Plugins(_PLUGINS_LIMIT, _PLUGIN_CALL_GAS_LIMIT)
         ERC20("Staking 1INCH v2", "st1INCH")
         VotingPowerCalculator(expBase_, block.timestamp)
+        Ownable(msg.sender)
     {
         // voting power after MAX_LOCK_PERIOD should be equal to staked amount divided by _VOTING_POWER_DIVIDER
         if (_votingPowerAt(1e18, block.timestamp + MAX_LOCK_PERIOD) * _VOTING_POWER_DIVIDER < 1e18) revert ExpBaseTooBig();
@@ -418,21 +419,5 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      */
     function transferFrom(address, address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
-    }
-
-    /**
-     * @notice Always reverts to disable ERC20 token transfer feature
-     * @dev This function always reverts
-     */
-    function increaseAllowance(address, uint256) public pure override returns (bool) {
-        revert ApproveDisabled();
-    }
-
-    /**
-     * @notice Always reverts to disable ERC20 token transfer feature
-     * @dev This function always reverts
-     */
-    function decreaseAllowance(address, uint256) public pure override returns (bool) {
-        revert ApproveDisabled();
     }
 }

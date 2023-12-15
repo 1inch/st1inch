@@ -332,9 +332,8 @@ describe('St1inch', function () {
 
     it("shouldn't call setEmergencyExit if caller isn't the owner", async function () {
         const { st1inch } = await loadFixture(initContracts);
-        await expect(st1inch.connect(addr1).setEmergencyExit(true)).to.be.revertedWith(
-            'Ownable: caller is not the owner',
-        );
+        await expect(st1inch.connect(addr1).setEmergencyExit(true)).to.be.revertedWithCustomError(st1inch, 'OwnableUnauthorizedAccount')
+            .withArgs(addr1.address);
     });
 
     describe('earlyWithdrawTo', async function () {
