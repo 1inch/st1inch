@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
@@ -241,7 +241,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         oneInch.safePermit(permit);
         _deposit(account, amount, 0);
     }
-    
+
     /**
      * @notice Implements logic to stake tokens and add the staker for the default farm if needed
      * @param account The account staking tokens
@@ -328,7 +328,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         (loss, ret) = _earlyWithdrawLoss(amount, balanceOf(account));
         canWithdraw = loss <= amount * maxLossRatio / _ONE_E9;
     }
-    
+
     /**
      * @notice Calculates the loss amount if the staker does early withdrawal at the current block
      * @dev Internal, Maths:
