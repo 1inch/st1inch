@@ -25,9 +25,9 @@
     "test:ci": "hardhat test"
   },
   "dependencies": {
-    "@1inch/farming": "git+https://github.com/1inch/farming.git#d140c9a39ed46eb6dbef9c4970b40c5528233c53",
-    "@1inch/solidity-utils": "3.5.4",
-    "@1inch/token-plugins": "git+https://github.com/1inch/token-plugins.git#4d113410faedfbd385df6c99a4481e3e0d001e08",
+    "@1inch/token-plugins": "https://github.com/1inch/token-plugins.git#feature/bump-solidity",
+    "@1inch/farming": "https://github.com/1inch/farming.git#feature/bump-solidity",
+    "@1inch/solidity-utils": "3.5.5",
     "@openzeppelin/contracts": "5.0.1"
   },
   "devDependencies": {

@@ -115,7 +115,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      * @param defaultFarm_ The farm contract address
      */
     function setDefaultFarm(address defaultFarm_) external onlyOwner {
-        if (defaultFarm_ != address(0) && Plugin(defaultFarm_).token() != this) revert DefaultFarmTokenMismatch();
+        if (defaultFarm_ != address(0) && Plugin(defaultFarm_).TOKEN() != this) revert DefaultFarmTokenMismatch();
         defaultFarm = defaultFarm_;
         emit DefaultFarmSet(defaultFarm_);
     }

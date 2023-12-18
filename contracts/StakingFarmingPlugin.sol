@@ -10,7 +10,7 @@ contract StakingFarmingPlugin is FarmingPlugin {
 
     ISt1inch public immutable st1inch;
 
-    constructor(ISt1inch st1inch_) FarmingPlugin(st1inch_, st1inch_.oneInch()) {
+    constructor(ISt1inch st1inch_, address owner_) FarmingPlugin(st1inch_, st1inch_.oneInch(), owner_) {
         st1inch = st1inch_;
     }
 
