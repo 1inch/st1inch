@@ -141,10 +141,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@eslint/js@8.55.0":
-  version "8.55.0"
-  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.55.0.tgz#b721d52060f369aa259cf97392403cb9ce892ec6"
-  integrity sha512-qQfo2mxH5yVom1kacMtZZJFVdW+E70mqHMJvVg6WTLo+VBuQJ4TojZlfWBjK0ve5BdEeNAVxOsl/nvNMpJOaJA==
+"@eslint/js@8.56.0":
+  version "8.56.0"
+  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
+  integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
 "@ethereumjs/common@^3.2.0":
   version "3.2.0"
@@ -2433,15 +2433,15 @@ eslint-visitor-keys@^3.4.3:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.4.3.tgz#0cd72fe8550e3c2eae156a96a4dddcd1c8ac5800"
   integrity sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==
 
-eslint@8.55.0:
-  version "8.55.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.55.0.tgz#078cb7b847d66f2c254ea1794fa395bf8e7e03f8"
-  integrity sha512-iyUUAM0PCKj5QpwGfmCAG9XXbZCWsqP/eWAWrG/W0umvjuLRBECwSFdt+rCntju0xEH7teIABPwXpahftIaTdA==
+eslint@8.56.0:
+  version "8.56.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.56.0.tgz#4957ce8da409dc0809f99ab07a1b94832ab74b15"
+  integrity sha512-Go19xM6T9puCOWntie1/P997aXxFsOi37JIHRWI514Hc6ZnaHGKY9xFhrU65RT6CcBEzZoGG1e6Nq+DT04ZtZQ==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.6.1"
     "@eslint/eslintrc" "^2.1.4"
-    "@eslint/js" "8.55.0"
+    "@eslint/js" "8.56.0"
     "@humanwhocodes/config-array" "^0.11.13"
     "@humanwhocodes/module-importer" "^1.0.1"
     "@nodelib/fs.walk" "^1.2.8"
@@ -3223,6 +3223,36 @@ hardhat-deploy@0.11.44:
   version "0.11.44"
   resolved "https://registry.yarnpkg.com/hardhat-deploy/-/hardhat-deploy-0.11.44.tgz#a7a771a675a3837ce4c321f2c18d4b6fa1ed03a0"
   integrity sha512-kAkCvTYPpdIvnWCc3F0xg3AbVsa/SgH9aePPO7e7nHUOkg07LGKuknU/UaVAfWwHe7Zs57pQIAolAQyKI+mnXw==
+  dependencies:
+    "@ethersproject/abi" "^5.7.0"
+    "@ethersproject/abstract-signer" "^5.7.0"
+    "@ethersproject/address" "^5.7.0"
+    "@ethersproject/bignumber" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/constants" "^5.7.0"
+    "@ethersproject/contracts" "^5.7.0"
+    "@ethersproject/providers" "^5.7.2"
+    "@ethersproject/solidity" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
+    "@ethersproject/wallet" "^5.7.0"
+    "@types/qs" "^6.9.7"
+    axios "^0.21.1"
+    chalk "^4.1.2"
+    chokidar "^3.5.2"
+    debug "^4.3.2"
+    enquirer "^2.3.6"
+    ethers "^5.7.0"
+    form-data "^4.0.0"
+    fs-extra "^10.0.0"
+    match-all "^1.2.6"
+    murmur-128 "^0.2.1"
+    qs "^6.9.4"
+    zksync-web3 "^0.14.3"
+
+hardhat-deploy@0.11.45:
+  version "0.11.45"
+  resolved "https://registry.yarnpkg.com/hardhat-deploy/-/hardhat-deploy-0.11.45.tgz#bed86118175a38a03bb58aba2ce1ed5e80a20bc8"
+  integrity sha512-aC8UNaq3JcORnEUIwV945iJuvBwi65tjHVDU3v6mOcqik7WAzHVCJ7cwmkkipsHrWysrB5YvGF1q9S1vIph83w==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/abstract-signer" "^5.7.0"
@@ -5076,7 +5106,7 @@ semver@^7.0.0, semver@^7.3.4:
   dependencies:
     lru-cache "^6.0.0"
 
-semver@^7.5.3, semver@^7.5.4:
+semver@^7.5.2, semver@^7.5.3, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
@@ -5218,10 +5248,10 @@ solc@0.8.23:
     semver "^5.5.0"
     tmp "0.0.33"
 
-solhint@3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/solhint/-/solhint-3.4.1.tgz#8ea15b21c13d1be0b53fd46d605a24d0b36a0c46"
-  integrity sha512-pzZn2RlZhws1XwvLPVSsxfHrwsteFf5eySOhpAytzXwKQYbTCJV6z8EevYDiSVKMpWrvbKpEtJ055CuEmzp4Xg==
+solhint@3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/solhint/-/solhint-3.6.2.tgz#2b2acbec8fdc37b2c68206a71ba89c7f519943fe"
+  integrity sha512-85EeLbmkcPwD+3JR7aEMKsVC9YrRSxd4qkXuMzrlf7+z2Eqdfm1wHWq1ffTuo5aDhoZxp2I9yF3QkxZOxOL7aQ==
   dependencies:
     "@solidity-parser/parser" "^0.16.0"
     ajv "^6.12.6"
@@ -5236,7 +5266,7 @@ solhint@3.4.1:
     js-yaml "^4.1.0"
     lodash "^4.17.21"
     pluralize "^8.0.0"
-    semver "^6.3.0"
+    semver "^7.5.2"
     strip-ansi "^6.0.1"
     table "^6.8.1"
     text-table "^0.2.0"
