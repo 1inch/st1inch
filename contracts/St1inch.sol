@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
@@ -64,7 +64,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
     uint256 private constant _PLUGIN_CALL_GAS_LIMIT = 500_000;
     uint256 private constant _ONE_E9 = 1e9;
 
-    IERC20 public immutable oneInch;
+    IERC20 public immutable ONE_INCH;
 
     /// @notice The stucture to store stake information for a staker
     struct Depositor {
@@ -91,12 +91,13 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         ERC20Plugins(_PLUGINS_LIMIT, _PLUGIN_CALL_GAS_LIMIT)
         ERC20("Staking 1INCH v2", "st1INCH")
         VotingPowerCalculator(expBase_, block.timestamp)
+        Ownable(msg.sender)
     {
         // voting power after MAX_LOCK_PERIOD should be equal to staked amount divided by _VOTING_POWER_DIVIDER
         if (_votingPowerAt(1e18, block.timestamp + MAX_LOCK_PERIOD) * _VOTING_POWER_DIVIDER < 1e18) revert ExpBaseTooBig();
         if (_votingPowerAt(1e18, block.timestamp + MAX_LOCK_PERIOD + 1) * _VOTING_POWER_DIVIDER > 1e18) revert ExpBaseTooSmall();
         setFeeReceiver(feeReceiver_);
-        oneInch = oneInch_;
+        ONE_INCH = oneInch_;
     }
 
     /**
@@ -114,7 +115,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      * @param defaultFarm_ The farm contract address
      */
     function setDefaultFarm(address defaultFarm_) external onlyOwner {
-        if (defaultFarm_ != address(0) && Plugin(defaultFarm_).token() != this) revert DefaultFarmTokenMismatch();
+        if (defaultFarm_ != address(0) && Plugin(defaultFarm_).TOKEN() != this) revert DefaultFarmTokenMismatch();
         defaultFarm = defaultFarm_;
         emit DefaultFarmSet(defaultFarm_);
     }
@@ -217,7 +218,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      * @param permit Permit given by the staker
      */
     function depositWithPermit(uint256 amount, uint256 duration, bytes calldata permit) external {
-        oneInch.safePermit(permit);
+        ONE_INCH.safePermit(permit);
         _deposit(msg.sender, amount, duration);
     }
 
@@ -238,10 +239,10 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      * @param permit Permit given by the caller
      */
     function depositForWithPermit(address account, uint256 amount, bytes calldata permit) external {
-        oneInch.safePermit(permit);
+        ONE_INCH.safePermit(permit);
         _deposit(account, amount, 0);
     }
-    
+
     /**
      * @notice Implements logic to stake tokens and add the staker for the default farm if needed
      * @param account The account staking tokens
@@ -266,7 +267,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         _mint(account, balanceDiff);
 
         if (amount > 0) {
-            oneInch.safeTransferFrom(msg.sender, address(this), amount);
+            ONE_INCH.safeTransferFrom(msg.sender, address(this), amount);
         }
 
         if (defaultFarm != address(0) && !hasPlugin(account, defaultFarm)) {
@@ -311,8 +312,8 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
             if (loss > amount * maxLossRatio / _ONE_E9) revert LossIsTooBig();
 
             _withdraw(depositor, balance);
-            oneInch.safeTransfer(to, ret);
-            oneInch.safeTransfer(feeReceiver, loss);
+            ONE_INCH.safeTransfer(to, ret);
+            ONE_INCH.safeTransfer(feeReceiver, loss);
         }
     }
 
@@ -328,7 +329,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         (loss, ret) = _earlyWithdrawLoss(amount, balanceOf(account));
         canWithdraw = loss <= amount * maxLossRatio / _ONE_E9;
     }
-    
+
     /**
      * @notice Calculates the loss amount if the staker does early withdrawal at the current block
      * @dev Internal, Maths:
@@ -365,7 +366,7 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         uint256 amount = depositor.amount;
         if (amount > 0) {
             _withdraw(depositor, balanceOf(msg.sender));
-            oneInch.safeTransfer(to, amount);
+            ONE_INCH.safeTransfer(to, amount);
         }
     }
 
@@ -387,8 +388,8 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
         if (address(token) == address(0)) {
             Address.sendValue(payable(msg.sender), amount);
         } else {
-            if (token == oneInch) {
-                if (amount > oneInch.balanceOf(address(this)) - totalDeposits) revert RescueAmountIsTooLarge();
+            if (token == ONE_INCH) {
+                if (amount > ONE_INCH.balanceOf(address(this)) - totalDeposits) revert RescueAmountIsTooLarge();
             }
             token.safeTransfer(msg.sender, amount);
         }
@@ -418,21 +419,5 @@ contract St1inch is ERC20Plugins, Ownable, VotingPowerCalculator, IVotable {
      */
     function transferFrom(address, address, uint256) public pure override(IERC20, ERC20) returns (bool) {
         revert TransferDisabled();
-    }
-
-    /**
-     * @notice Always reverts to disable ERC20 token transfer feature
-     * @dev This function always reverts
-     */
-    function increaseAllowance(address, uint256) public pure override returns (bool) {
-        revert ApproveDisabled();
-    }
-
-    /**
-     * @notice Always reverts to disable ERC20 token transfer feature
-     * @dev This function always reverts
-     */
-    function decreaseAllowance(address, uint256) public pure override returns (bool) {
-        revert ApproveDisabled();
     }
 }

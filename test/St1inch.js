@@ -34,7 +34,7 @@ describe('St1inch', function () {
     };
 
     const checkBalances = async (account, balance, lockDuration, st1inch) => {
-        const origin = await st1inch.origin();
+        const origin = await st1inch.ORIGIN();
         expect((await st1inch.depositors(account)).amount).to.equal(balance);
         const t = BigInt(await time.latest()) + BigInt(lockDuration) - origin;
         const originPower = expInv(balance, t) / votingPowerDivider;
@@ -209,14 +209,14 @@ describe('St1inch', function () {
 
     it('call deposit, 1 year lock, compare voting power against expected value', async function () {
         const { st1inch } = await loadFixture(initContracts);
-        const origin = await st1inch.origin();
+        const origin = await st1inch.ORIGIN();
         await st1inch.deposit(ether('1'), time.duration.days('365'));
         assertRoughlyEqualValues(await st1inch.votingPowerOfAt(addr, origin), ether('0.22360'), 1e-4);
     });
 
     it('call deposit, 2 years lock, compare voting power against expected value', async function () {
         const { st1inch } = await loadFixture(initContracts);
-        const origin = await st1inch.origin();
+        const origin = await st1inch.ORIGIN();
         await st1inch.deposit(ether('1'), time.duration.days('730'));
         assertRoughlyEqualValues(await st1inch.votingPowerOfAt(addr, origin), ether('1'), 1e-4);
     });
@@ -332,9 +332,8 @@ describe('St1inch', function () {
 
     it("shouldn't call setEmergencyExit if caller isn't the owner", async function () {
         const { st1inch } = await loadFixture(initContracts);
-        await expect(st1inch.connect(addr1).setEmergencyExit(true)).to.be.revertedWith(
-            'Ownable: caller is not the owner',
-        );
+        await expect(st1inch.connect(addr1).setEmergencyExit(true)).to.be.revertedWithCustomError(st1inch, 'OwnableUnauthorizedAccount')
+            .withArgs(addr1.address);
     });
 
     describe('earlyWithdrawTo', async function () {
