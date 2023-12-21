@@ -2,12 +2,13 @@
 # yarn lockfile v1
 
 
-"@1inch/farming@https://github.com/1inch/farming.git#feature/bump-solidity":
-  version "3.3.0"
-  resolved "https://github.com/1inch/farming.git#504732d311a429d61206d79fe5e6219a542df693"
+"@1inch/farming@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@1inch/farming/-/farming-3.2.0.tgz#0091a713f7df3c99050e7a98b5d168ddc83fb3de"
+  integrity sha512-5XM2hH5fC5pkCYW6diCl2/TuaitPHQbkqfIOFgXyBUFqKey9+ZaKG/qtKTtS8r2S2SACjUiM54lczVMw4meZfg==
   dependencies:
     "@1inch/solidity-utils" "3.5.5"
-    "@1inch/token-plugins" "https://github.com/1inch/token-plugins.git#feature/bump-solidity"
+    "@1inch/token-plugins" "1.3.0"
     "@openzeppelin/contracts" "5.0.1"
 
 "@1inch/solidity-utils@3.5.5":
@@ -32,13 +33,6 @@
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@1inch/token-plugins/-/token-plugins-1.3.0.tgz#365d50d4953225816a4749301150c6612b13e874"
   integrity sha512-Um/8GKAC2Q2C6sITmGj+zr1xiJ3/jPtR/FllwMsDrdfEr7+AVbKH+GL755A7/MS8qz2Df10gSS8iz9Dj/N7/0g==
-  dependencies:
-    "@1inch/solidity-utils" "3.5.5"
-    "@openzeppelin/contracts" "5.0.1"
-
-"@1inch/token-plugins@https://github.com/1inch/token-plugins.git#feature/bump-solidity":
-  version "1.3.0"
-  resolved "https://github.com/1inch/token-plugins.git#db56a45bda700080228f3e2b92802c50edf27070"
   dependencies:
     "@1inch/solidity-utils" "3.5.5"
     "@openzeppelin/contracts" "5.0.1"
