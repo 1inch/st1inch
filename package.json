@@ -11,7 +11,6 @@
     "clean": "rimraf artifacts cache coverage contracts/hardhat-dependency-compiler",
     "deploy": "hardhat deploy --network",
     "coverage": "hardhat coverage",
-    "docify": "npx solidity-utils-docify",
     "format": "yarn format-js && yarn format-sol",
     "format-js": "prettier '**/*.js' --write",
     "format-sol": "prettier '**/*.sol' --write",
