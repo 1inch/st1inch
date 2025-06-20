@@ -53,5 +53,8 @@
     "solhint": "3.6.2",
     "solidity-coverage": "0.8.5",
     "solidity-docgen": "0.5.17"
+  },
+  "resolutions": {
+    "elliptic": "^6.5.7"
   }
 }
